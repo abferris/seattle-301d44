@@ -1,24 +1,24 @@
-'use strict';
+`use strict`;
 
-var names = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
+const names = [`bag`, `banana`, `bathroom`, `boots`, `breakfast`, `bubblegum`, `chair`, `cthulhu`, `dog-duck`, `dragon`, `pen`, `pet-sweep`, `scissors`, `shark`, `sweep`, `tauntaun`, `unicorn`, `usb`, `water-can`, `wine-glass`];
 
-var leftImage = document.getElementById('left');
-var centerImage = document.getElementById('center');
-var rightImage = document.getElementById('right');
+const leftImage = document.getElementById(`left`);
+const centerImage = document.getElementById(`center`);
+const rightImage = document.getElementById(`right`);
 
-var allProducts = [];
-var container = document.getElementById('image_container');
-var viewed = [];
-var labels = [];
-var pics = [leftImage, centerImage, rightImage];
-var list = document.getElementById('productlist');
-var totalClicks = 0;
-var views = [];
-var votes = [];
+let allProducts = [];
+const container = document.getElementById(`image_container`);
+const viewed = [];
+const labels = [];
+const pics = [leftImage, centerImage, rightImage];
+const list = document.getElementById(`productlist`);
+let totalClicks = 0;
+const views = [];
+const votes = [];
 
 function Product(name) {
   this.name = name;
-  this.path = 'img/' + name + '.jpg';
+  this.path = `img/${name}.jpg`;
   this.votes = 0;
   this.views = 0;
   allProducts.push(this);
@@ -30,18 +30,17 @@ function makeRandom() {
 
 function displayPics(){
   while(viewed.length < 6){
-    var rando = makeRandom();
+    const rando = makeRandom();
     while(!viewed.includes(rando)){
       viewed.push(rando);
     }
   }
-  console.log(rando);
   // TODO: In a sentence or two, explain why the previous line of code threw an error when we changed the variable declaration from `var to `let`.
-  // PUT YOUR RESPONSE IN THIS COMMENT
+  // Aaron Response: Rando was defined in a place where the scope of it only existed inside the while loop. It was more specific in scope, so it did not exist specifically where it was asking to access the value of rando.
   console.log(viewed);
 
-  for (var i = 0; i < 3; i++){
-    var temp = viewed.shift();
+  for (let i = 0; i < 3; i++){
+    const temp = viewed.shift();
     pics[i].src = allProducts[temp].path;
     pics[i].id = allProducts[temp].name;
     allProducts[temp].views += 1;
@@ -49,20 +48,20 @@ function displayPics(){
 }
 
 function handleClick(event) {
-  if (event.target.id === 'image_container') {
-    return alert('Be sure to click directly on an image!!');
+  if (event.target.id === `image_container`) {
+    return alert(`Be sure to click directly on an image!!`);
   }
   totalClicks += 1;
   if(totalClicks > 24) {
-    container.removeEventListener('click', handleClick);
-    container.style.display = 'none';
+    container.removeEventListener(`click`, handleClick);
+    container.style.display = `none`;
     showList();
     makeChart();
   }
-  for(var i = 0; i < names.length; i++){
+  for(let i = 0; i < names.length; i++){
     if(event.target.id === allProducts[i].name) {
       allProducts[i].votes += 1;
-      console.log(event.target.id + ' has ' + allProducts[i].votes + ' votes in ' + allProducts[i].views + ' views');
+      console.log(`${event.target.id} has ${allProducts[i].votes} votes in ${allProducts[i].views} views`);
     }
   }
   localStorage.busmall = JSON.stringify(allProducts);
@@ -71,9 +70,9 @@ function handleClick(event) {
 }
 
 function showList() {
-  for(var i = 0; i < allProducts.length; i++) {
-    var liEl = document.createElement('li');
-    liEl.textContent = allProducts[i].name + ' has ' + allProducts[i].votes + ' votes in ' + allProducts[i].views + ' views';
+  for(let i = 0; i < allProducts.length; i++) {
+    const liEl = document.createElement(`li`);
+    liEl.textContent = `${allProducts[i].name} has ${allProducts[i].votes} votes in ${allProducts[i].views} views`;
     list.appendChild(liEl);
   }
 }
@@ -88,15 +87,15 @@ function makeChartData(){
 
 function makeChart(){
   makeChartData();
-  var ctx = document.getElementById('chartypants').getContext('2d');
+  const ctx = document.getElementById(`chartypants`).getContext(`2d`);
   new Chart(ctx, { //eslint-disable-line
-    type: 'bar',
+    type: `bar`,
     data: {
       labels: labels,
       datasets: [{
-        label: 'total votes',
-        backgroundColor: 'gold',
-        borderColor: '#214',
+        label: `total votes`,
+        backgroundColor: `gold`,
+        borderColor: `#214`,
         data: votes,
       }]
     },
@@ -113,22 +112,22 @@ function makeChart(){
       }
     }
   });
-  Chart.defaults.global.defaultFontColor = '#eee'; //eslint-disable-line
+  Chart.defaults.global.defaultFontColor = `#eee`; //eslint-disable-line
 }
 
-container.addEventListener('click', handleClick);
+container.addEventListener(`click`, handleClick);
 
-document.getElementById('bus').addEventListener('click', function(){
-  localStorage.removeItem('busmall');
-  console.log('Local storage was cleared!');
+document.getElementById(`bus`).addEventListener(`click`, function(){
+  localStorage.removeItem(`busmall`);
+  console.log(`Local storage was cleared!`);
 });
 
 if(localStorage.busmall){
-  console.log('Local storage data exists');
+  console.log(`Local storage data exists`);
   allProducts = JSON.parse(localStorage.busmall);
 } else {
-  console.log('There is no local storage data; initialize app by creating instances');
-  for(var i = 0; i < names.length; i++) {
+  console.log(`There is no local storage data; initialize app by creating instances`);
+  for(let i = 0; i < names.length; i++) {
     new Product(names[i]);
   }
 }
